@@ -56,9 +56,9 @@ export default memo(() => {
   return (
     <Section title={t('setting_about')}>
       <View style={styles.part}>
-        <Text style={styles.text} >本软件代码已开源，开源地址：</Text>
+        <Text style={styles.text} >本软件代码开源，开源地址：</Text>
         <TouchableOpacity onPress={openHomePage}>
-          <Text style={textLinkStyle}>https://github.com/lyswhut/lx-music-mobile</Text>
+          <Text style={textLinkStyle}>https://github.com</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.part}>
