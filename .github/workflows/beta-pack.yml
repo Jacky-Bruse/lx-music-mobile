@@ -38,25 +38,44 @@ jobs:
         env:
           PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
 
-      - name: Create Release
-        id: create_release
+  Release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [Android]
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+          merge-multiple: true
+
+      - name: Generate file MD5
+        run: |
+          echo -e '\n### File MD5\n```' >> ./publish/changeLog.md
+          cd artifacts
+          md5sum *.apk >> ../publish/changeLog.md
+          echo -e '```\n' >> ../publish/changeLog.md
+
+      - name: Get package version
+        run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
+
+      - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: android/app/build/outputs/apk/release/*.apk
+          body_path: ./publish/changeLog.md
+          prerelease: false
+          draft: false
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          files: |
+            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-arm64-v8a.apk
+            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-armeabi-v7a.apk
+            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86_64.apk
+            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-x86.apk
+            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-universal.apk
+            android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-sl-arm64-v8a.apk
+          # android/app/build/outputs/apk/release/lx-music-mobile-v${{ env.PACKAGE_VERSION }}-android_5-universal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Rename Release
-        run: |
-          release_id=$(echo "${{ steps.create_release.outputs.release_id }}" | tr -d '\n')
-          new_name="beta
-
-          echo "::set-env name=RELEASE_NAME::${new_name}"
-          curl -X PATCH -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/${release_id}" \
-            -d "{\"name\":\"${new_name}\"}"
-
-      - name: Upload Artifact
-        uses: ./.github/actions/upload-artifact
-        env:
-          PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
