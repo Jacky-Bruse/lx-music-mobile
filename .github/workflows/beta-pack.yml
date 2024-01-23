@@ -38,17 +38,25 @@ jobs:
         env:
           PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
 
-  Release:
-    needs: Android
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: '1.20'
-      - name: Install softprops/action-gh-release
-        run: go install github.com/softprops/action-gh-release@latest
       - name: Create Release
-        run: gh release create v${{ env.PACKAGE_VERSION }} android/app/build/outputs/apk/release/*.apk
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: android/app/build/outputs/apk/release/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rename Release
+        run: |
+          release_id=$(echo "${{ steps.create_release.outputs.release_id }}" | tr -d '\n')
+          new_name="beta
+
+          echo "::set-env name=RELEASE_NAME::${new_name}"
+          curl -X PATCH -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/${release_id}" \
+            -d "{\"name\":\"${new_name}\"}"
+
+      - name: Upload Artifact
+        uses: ./.github/actions/upload-artifact
+        env:
+          PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
