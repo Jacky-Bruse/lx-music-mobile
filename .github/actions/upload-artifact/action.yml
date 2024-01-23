@@ -1,0 +1,11 @@
+name: Setup
+description: Setup Env
+
+runs:
+  using: composite
+  steps:
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-v${{ env.PACKAGE_VERSION }}-release
+        path: android/app/build/outputs/apk/release/*.apk
