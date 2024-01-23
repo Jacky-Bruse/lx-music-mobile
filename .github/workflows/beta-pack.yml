@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - beta
+      - master
 
 jobs:
   Android:
