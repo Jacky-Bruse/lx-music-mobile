@@ -37,3 +37,18 @@ jobs:
         uses: ./.github/actions/upload-artifact
         env:
           PACKAGE_VERSION: ${{ env.PACKAGE_VERSION }}
+
+  Release:
+    needs: Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.20'
+      - name: Install softprops/action-gh-release
+        run: go install github.com/softprops/action-gh-release@latest
+      - name: Create Release
+        run: gh release create v${{ env.PACKAGE_VERSION }} android/app/build/outputs/apk/release/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
