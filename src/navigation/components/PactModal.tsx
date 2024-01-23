@@ -15,9 +15,6 @@ import { checkUpdate } from '@/core/version'
 const Content = () => {
   const theme = useTheme()
 
-  const openHomePage = () => {
-    void openUrl('https://github.com/lyswhut/lx-music-mobile#readme')
-  }
   const openLicensePage = () => {
     void openUrl('http://www.apache.org/licenses/LICENSE-2.0')
   }
