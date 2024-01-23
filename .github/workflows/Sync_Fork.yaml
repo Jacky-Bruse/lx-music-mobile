@@ -6,7 +6,7 @@ permissions:
 on:
   push: # push 时触发, 主要是为了测试配置有没有问题
   schedule:
-    - cron: '0 21 * * *'   # 每天晚上 9点触发
+    - cron: '* 21 * * *'   # 每天晚上 9点触发
   workflow_dispatch:
 
 jobs:
