@@ -30,14 +30,6 @@ jobs:
           target_sync_branch: beta               #fork后的分支
           target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
 
-      - name: Sync upstream changes
-        id: sync2
-        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
-        with:
-          upstream_sync_repo: lyswhut/lx-music-mobile     #修改原库
-          upstream_sync_branch: dev              #对应分支
-          target_sync_branch: dev              #fork后的分支
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
 
 
           # Set test_mode true to run tests instead of the true action!!
