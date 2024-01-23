@@ -13,8 +13,6 @@ jobs:
       - name: Check out git repository
         uses: actions/checkout@v4
 
-      - name: Setup Env
-        uses: ./.github/actions/setup
 
       - name: Build Packages
         shell: bash
