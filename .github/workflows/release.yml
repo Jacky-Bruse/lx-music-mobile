@@ -109,12 +109,6 @@ jobs:
           path: ./artifacts
           merge-multiple: true
 
-      - name: Generate file MD5
-        run: |
-          echo -e '\n### File MD5\n```' >> ./publish/changeLog.md
-          cd artifacts
-          md5sum *.apk >> ../publish/changeLog.md
-          echo -e '```\n' >> ../publish/changeLog.md
 
       - name: Get package version
         run: node -p -e '`PACKAGE_VERSION=${require("./package.json").version}`' >> $GITHUB_ENV
