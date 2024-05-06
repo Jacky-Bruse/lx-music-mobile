@@ -134,7 +134,7 @@ jobs:
           CHAT_ID="${{ secrets.TELEGRAM_USER_ID }}"  # Use the secret here
           for file in android/app/build/outputs/apk/release/*arm64-v8a.apk; do
             current_date=$(date +"%Y-%m-%d")  # Get current date in YYYY-MM-DD format
-            caption="🚀New releases on $current_date Enjoy Music!🚀"
+            caption="🎵 New Releases on $current_date Enjoy Music! 🎵"
             curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
               -F "chat_id=${CHAT_ID}" \
               -F "document=@${file}" \
