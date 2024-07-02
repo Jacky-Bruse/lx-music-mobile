@@ -40,6 +40,7 @@ jobs:
         run: |
           cd android/app/build/outputs/apk/release
           md5sum *.apk
+          
       - name: Upload Artifact
         uses: ./.github/actions/upload-artifact
         env:
