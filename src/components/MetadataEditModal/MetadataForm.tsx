@@ -126,6 +126,7 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
     }).finally(() => {
       matcheingPic.delete(path)
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.albumName, data.name, data.singer, t])
   const handleOnlineMatchLyric = useCallback(() => {
     let path = filePath.current
@@ -164,6 +165,7 @@ export default forwardRef<MetadataFormType, {}>((props, ref) => {
     }).finally(() => {
       matcheingLrc.delete(path)
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.albumName, data.name, data.singer, t])
   const handleUpdatePic = useCallback((path: string) => {
     setData(data => {

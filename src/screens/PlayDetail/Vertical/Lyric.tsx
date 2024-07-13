@@ -247,6 +247,7 @@ export default () => {
         }, 100)
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lyricLines])
 
   useEffect(() => {
@@ -264,6 +265,7 @@ export default () => {
       delayScrollTimeout.current = null
       handleScrollToActive()
     }, 600)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [line])
 
   useEffect(() => {
