@@ -10,6 +10,7 @@ import playerState from '@/store/player/state'
 import type { SelectInfo } from './ListMenu'
 import { type Metadata } from '@/components/MetadataEditModal'
 import musicSdk from '@/utils/musicSdk'
+import { getListMusicSync } from '@/utils/listManage'
 
 export const handlePlay = (listId: SelectInfo['listId'], index: SelectInfo['index']) => {
   void playList(listId, index)
@@ -99,7 +100,7 @@ export const handleShowMusicSourceDetail = async(minfo: SelectInfo['musicInfo'])
 
 export const handleDislikeMusic = async(musicInfo: SelectInfo['musicInfo']) => {
   const confirm = await confirmDialog({
-    message: global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
+    message: musicInfo.singer ? global.i18n.t('lists_dislike_music_singer_tip', { name: musicInfo.name, singer: musicInfo.singer }) : global.i18n.t('lists_dislike_music_tip', { name: musicInfo.name }),
     cancelButtonText: global.i18n.t('cancel_button_text_2'),
     confirmButtonText: global.i18n.t('confirm_button_text'),
     bgClose: false,
@@ -110,4 +111,29 @@ export const handleDislikeMusic = async(musicInfo: SelectInfo['musicInfo']) => {
   if (hasDislike(playerState.playMusicInfo.musicInfo)) {
     void playNext(true)
   }
+}
+
+
+export const handleToggleSource = (listId: string, musicInfo: LX.Music.MusicInfo, toggleMusicInfo?: LX.Music.MusicInfoOnline | null) => {
+  const list = getListMusicSync(listId)
+  const idx = list.findIndex(m => m.id == musicInfo.id)
+  if (idx < 0) return null
+  musicInfo.meta.toggleMusicInfo = toggleMusicInfo
+  const newInfo = {
+    ...musicInfo,
+    meta: {
+      ...musicInfo.meta,
+      toggleMusicInfo,
+    },
+  }
+  void updateListMusics([
+    {
+      id: listId,
+      musicInfo: newInfo as LX.Music.MusicInfo,
+    },
+  ])
+  if (!!toggleMusicInfo || (playerState.playMusicInfo.listId == listId && playerState.playMusicInfo.musicInfo?.id == musicInfo.id)) {
+    void playList(listId, idx)
+  }
+  return newInfo as LX.Music.MusicInfo
 }
